@@ -1,40 +1,48 @@
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 import dagshub
+import requests
+import mlflow
 
-# DagsHub experiment tracking
-dagshub.init("wine-quality-classification", "vinayswaroop699")
+# Load the wine quality dataset
+data = pd.read_csv(r'C:\Users\USER\Documents\skillfyme_mlops\Flask_Model\model_code\wine_model.py')
 
-# Load dataset
-df = pd.read_csv(r"C:\Users\USER\Documents\skillfyme_mlops\Flask_Model\data\winequality-red.csv")
+# Features and target
+X = data.drop('quality', axis=1)
+y = data['quality']
 
-# Prepare features and target
-X = df.drop("quality", axis=1)
-y = df["quality"]
-
-# Convert to binary classification (good: quality >= 7)
-y = (y >= 7).astype(int)
-
-# Split data
+# Split into train and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Train model
-clf = RandomForestClassifier(n_estimators=100, random_state=42)
+# Create and train the classifier
+clf = RandomForestClassifier(random_state=42)
 clf.fit(X_train, y_train)
 
 # Predict and evaluate
 y_pred = clf.predict(X_test)
-report = classification_report(y_test, y_pred, output_dict=True)
 print(classification_report(y_test, y_pred))
 
-# Log metrics to DagsHub
-with dagshub.dagshub_logger() as logger:
-    logger.log_metrics(report["accuracy"], step=0)
-    for label in ["0", "1"]:
-        logger.log_metrics({
-            f"precision_{label}": report[label]["precision"],
-            f"recall_{label}": report[label]["recall"],
-            f"f1-score_{label}": report[label]["f1-score"]
-        }, step=0)
+accuracy = accuracy_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred, average='weighted')
+precision = precision_score(y_test, y_pred, average='weighted')
+recall = recall_score(y_test, y_pred, average='weighted')
+
+print(f"Accuracy: {accuracy:.4f}")
+print(f"F1-score (weighted): {f1:.4f}")
+print(f"Precision (weighted): {precision:.4f}")
+print(f"Recall (weighted): {recall:.4f}")
+
+dagshub.init(repo_owner='edurekajuly24gcp', repo_name='SKILLFY_190725', mlflow=True)
+
+with mlflow.start_run():
+    mlflow.log_param("model", "RandomForestClassifier")
+    mlflow.log_param("random_state", 42)
+    mlflow.log_param("test_size", 0.2)
+    mlflow.log_metric("accuracy", accuracy)
+    mlflow.log_metric("f1_score_weighted", f1)
+    mlflow.log_metric("precision_weighted", precision)
+    mlflow.log_metric("recall_weighted", recall)
