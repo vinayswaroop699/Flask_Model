@@ -9,7 +9,7 @@ import requests
 import mlflow
 
 # Load the wine quality dataset
-data = pd.read_csv('C:\Users\USER\Documents\skillfyme_mlops\Flask_Model\model_code\wine_model.py')
+data = pd.read_csv(r'C:\Users\USER\Documents\skillfyme_mlops\Flask_Model\data\winequality-red.csv')
 
 # Features and target
 X = data.drop('quality', axis=1)
@@ -36,7 +36,7 @@ print(f"F1-score (weighted): {f1:.4f}")
 print(f"Precision (weighted): {precision:.4f}")
 print(f"Recall (weighted): {recall:.4f}")
 
-dagshub.init(repo_owner='edurekajuly24gcp', repo_name='SKILLFY_190725', mlflow=True)
+dagshub.init(repo_owner='vinayswaroop699', repo_name='wine-quality-classification', mlflow=True)
 
 with mlflow.start_run():
     mlflow.log_param("model", "RandomForestClassifier")
