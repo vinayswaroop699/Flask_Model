@@ -9,7 +9,7 @@ import requests
 import mlflow
 
 # Load the wine quality dataset
-data = pd.read_csv(r'C:\Users\USER\Documents\skillfyme_mlops\Flask_Model\model_code\wine_model.py')
+data = pd.read_csv('C:\Users\USER\Documents\skillfyme_mlops\Flask_Model\model_code\wine_model.py')
 
 # Features and target
 X = data.drop('quality', axis=1)
