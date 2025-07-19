@@ -5,7 +5,7 @@ from sklearn.metrics import classification_report
 import dagshub
 
 # DagsHub experiment tracking
-dagshub.init("wine-quality-classification", "vinayswaroop6999", "mlops-projects")
+dagshub.init("wine-quality-classification", "vinayswaroop699", "wine-quality-classification")
 
 # Load dataset
 df = pd.read_csv(r"C:\Users\USER\Documents\skillfyme_mlops\Flask_Model\data\winequality-red.csv")
