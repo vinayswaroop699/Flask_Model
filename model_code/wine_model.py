@@ -16,7 +16,7 @@ X = data.drop('quality', axis=1)
 y = data['quality']
 
 # Split into train and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.6, random_state=42)
 
 # Create and train the classifier
 clf = RandomForestClassifier(random_state=42)
@@ -36,7 +36,7 @@ print(f"F1-score (weighted): {f1:.4f}")
 print(f"Precision (weighted): {precision:.4f}")
 print(f"Recall (weighted): {recall:.4f}")
 
-dagshub.init(repo_owner='vinayswaroop699', repo_name='wine-quality-classification', mlflow=True)
+dagshub.init(repo_owner='vinayswaroop699', repo_name='FLASK_MODEL', mlflow=True)
 
 with mlflow.start_run():
     mlflow.log_param("model", "RandomForestClassifier")
